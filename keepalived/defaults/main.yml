@@ -1,0 +1,6 @@
+---
+# defaults file for keepalived
+keepalived_master_ip: 192.168.61.146
+keepalived_backup_ip: 192.168.61.147
+keepalived_router_id: k8s
+keepalived_auth_pass: chinadaas_k8s

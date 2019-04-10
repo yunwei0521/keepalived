@@ -1,0 +1,20 @@
+---
+# tasks file for keepalived
+- name: install keepalived service
+  yum: name=keepalived-1.2.13-8.el7.x86_64 state=installed disablerepo=* enablerepo=chinadaas_base,chinadaas_updates
+- name: config keepalived master
+  template: src=master-keepalived.conf.j2 dest=/etc/keepalived/keepalived.conf
+  when: inventory_hostname == '{{ keepalived_master_ip }}'
+- name: config keepalived backup
+  template: src=backup-keepalived.conf.j2 dest=/etc/keepalived/keepalived.conf
+  when: inventory_hostname == '{{ keepalived_backup_ip }}'
+- name: upload keepalived scripts files
+  copy: src={{ item }} dest=/etc/keepalived/scripts/ mode=0755
+  with_items:
+  - chk_haproxy.sh 
+  - notify.sh
+- name: keepalived service started
+  service:
+    name: keepalived
+    state: restarted
+    enabled: yes
